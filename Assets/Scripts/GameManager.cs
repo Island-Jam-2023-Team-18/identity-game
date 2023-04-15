@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,6 +43,14 @@ public class GameManager : MonoBehaviour
   public TextMeshProUGUI daysPassedText;
   public TextMeshProUGUI currentSuccessesText;
   public TextMeshProUGUI currentFailsText;
+
+  //candidate factory
+  CandidateFactory candidaFactory;
+  //current candidate
+  Candidate currentCandidate;
+  //current rules
+  RuleSet currentRules;
+  //curren
 
   private void Awake()
   {
@@ -100,6 +109,14 @@ public class GameManager : MonoBehaviour
     gameUI.SetActive(true);
 
     dayTimeLeft = timePerDay;
+
+    candidaFactory = CandidateFactory.GetInstance();
+    currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
+    Debug.Log(currentCandidate.name);
+    Debug.Log(currentCandidate.dob);
+    Debug.Log(currentCandidate.gender);
+    Debug.Log(currentCandidate.expiration);
+    currentRules = new RuleSet();
   }
 
   public void PauseGame()
@@ -141,6 +158,15 @@ public class GameManager : MonoBehaviour
   {
     daysPassed += 1;
     daysPassedText.text = "Days passed: " + daysPassed;
+
+    currentRules = new RuleSet();
+    Debug.Log("XXXX");
+    Debug.Log(currentRules.GetDescriptions());
+    foreach(String rule in currentRules.GetDescriptions())
+    {
+      Debug.Log(rule);
+    }
+    Debug.Log("XXXX");
 
     totalSuccesses += roundSuccesses;
     roundSuccesses = 0;
@@ -204,8 +230,11 @@ public class GameManager : MonoBehaviour
 
   public void ValidateCandidate(bool accepted)
   {
+
+    // CAMBIAR DATE NOW POR CURRENT DATE
+    bool validationSucceded = currentRules.Validate(currentCandidate, DateTime.Now, (daysPassed + 1));
     // TO DO LOGIC HERE
-    if (accepted)
+    if (validationSucceded)
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
@@ -215,6 +244,13 @@ public class GameManager : MonoBehaviour
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
     }
+    candidaFactory = CandidateFactory.GetInstance();
+    currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
+    Debug.Log(currentCandidate.name);
+    Debug.Log(currentCandidate.dob);
+    Debug.Log(currentCandidate.gender);
+    Debug.Log(currentCandidate.expiration);
+    Debug.Log("-");
   }
   
 }
