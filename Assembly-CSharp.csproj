@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByAgeRule.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByGenderRule.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByOriginRule.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

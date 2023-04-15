@@ -29,7 +29,7 @@ public class RuleSet
             return false;
         }
 
-        for (int i = 0; i < rulesCount; i++)
+        for (int i = 0; i < rulesCount && i < rules.Count; i++)
         {
             if (!rules.ElementAt(i).Validate(candidate, currentDate)) {
                 return false;
