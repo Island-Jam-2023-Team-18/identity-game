@@ -44,6 +44,6 @@ public class CandidateFactory
             expiration = currentDate.AddDays(expireDays);
         }
 
-        return new Candidate("John Doe", dob, gender, expiration);
+        return new Candidate("John Doe", dob, gender, origin, expiration);
     }
 }
