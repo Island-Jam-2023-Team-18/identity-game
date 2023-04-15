@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,10 +16,41 @@ public class GameManager : MonoBehaviour
   public GameObject dayEndUI;
   public GameObject gameOverUI;
 
-  //TO DO
-  //private int daysPassed = 0;
-  private float timeLeft = 10.0f;
+  // End Day UI
+  public TextMeshProUGUI candidatesText;
+  //public TextMeshProUGUI accuracyRateText;
+  public TextMeshProUGUI trustText;
 
+  // Visible variables
+  public float timePerDay = 10f;
+
+  //TO DO
+  // Variables per run
+  private int daysPassed = 0;
+  private float dayTimeLeft = 10.0f;
+  private float currentTrust = 50.0f;
+
+  private int totalSuccesses = 0;
+  private int totalFails = 0;
+
+  // Variables per round
+  private int roundSuccesses = 0;
+  private int roundFails = 0;
+  //private float candidateTimeLeft = 20.0f;
+
+  // Debug
+  public TextMeshProUGUI timeLeftText;
+  public TextMeshProUGUI daysPassedText;
+  public TextMeshProUGUI currentSuccessesText;
+  public TextMeshProUGUI currentFailsText;
+
+  //candidate factory
+  CandidateFactory candidaFactory;
+  //current candidate
+  Candidate currentCandidate;
+  //current rules
+  RuleSet currentRules;
+  //curren
 
   private void Awake()
   {
@@ -36,10 +69,12 @@ public class GameManager : MonoBehaviour
     pauseMenuUI.SetActive(false);
     dayEndUI.SetActive(false);
     gameOverUI.SetActive(false);
+
   }
+
   void Start()
   {
-
+    Debug.Log(gameState);
   }
 
   void Update()
@@ -47,8 +82,14 @@ public class GameManager : MonoBehaviour
 
     if (gameState == GameState.Game)
     {
-      timeLeft -= Time.deltaTime;
-      if(timeLeft <= 0.0f)
+
+      //candidateTimeLeft -= Time.deltaTime;
+
+      dayTimeLeft -= Time.deltaTime;
+      dayTimeLeft = Mathf.Round(dayTimeLeft * 100f) * 0.01f;
+      //dayTimeLeft = Mathf.round(dayTimeLeft);
+      timeLeftText.text = "Day time left: " + dayTimeLeft;
+      if (dayTimeLeft <= 0.1f)
       {
         EndDay();
       }
@@ -66,6 +107,16 @@ public class GameManager : MonoBehaviour
 
     mainMenuUI.SetActive(false);
     gameUI.SetActive(true);
+
+    dayTimeLeft = timePerDay;
+
+    candidaFactory = CandidateFactory.GetInstance();
+    currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
+    Debug.Log(currentCandidate.name);
+    Debug.Log(currentCandidate.dob);
+    Debug.Log(currentCandidate.gender);
+    Debug.Log(currentCandidate.expiration);
+    currentRules = new RuleSet();
   }
 
   public void PauseGame()
@@ -91,12 +142,42 @@ public class GameManager : MonoBehaviour
     gameState = GameState.DayEnd;
     Debug.Log(gameState);
 
+    // TO DO CALCULATE TRUST!!!!!!
+    currentTrust += (roundSuccesses - roundFails);
+    int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
+    candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
+    //successesText.text = "Successes: " + roundSuccesses;
+    //failsText.text = "Fails: " + roundFails;
+    trustText. text = "Boss' confidence: " + currentTrust;
+
     gameUI.SetActive(false);
     dayEndUI.SetActive(true);
   }
 
   public void NextDay()
   {
+    daysPassed += 1;
+    daysPassedText.text = "Days passed: " + daysPassed;
+
+    currentRules = new RuleSet();
+    Debug.Log("XXXX");
+    Debug.Log(currentRules.GetDescriptions());
+    foreach(String rule in currentRules.GetDescriptions())
+    {
+      Debug.Log(rule);
+    }
+    Debug.Log("XXXX");
+
+    totalSuccesses += roundSuccesses;
+    roundSuccesses = 0;
+    currentSuccessesText.text = "Round successes: " + roundSuccesses;
+
+    totalFails += roundFails;
+    roundFails = 0;
+    currentFailsText.text = "Round fails: " + roundFails;
+
+    dayTimeLeft = timePerDay;
+
     gameState = GameState.Game;
     Debug.Log(gameState);
 
@@ -125,10 +206,51 @@ public class GameManager : MonoBehaviour
     gameOverUI.SetActive(false);
 
     mainMenuUI.SetActive(true);
+
+    daysPassed = 0;
+    daysPassedText.text = "Days passed: " + daysPassed;
+    dayTimeLeft = 10.0f;
+    currentTrust = 50.0f;
+
+    totalSuccesses = 0;
+    totalFails = 0;
+    
+    roundSuccesses = 0;
+    currentSuccessesText.text = "Round successes: " + roundSuccesses;
+
+    roundFails = 0;
+    currentFailsText.text = "Round fails: " + roundFails;
+    int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
+
+    candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
+    trustText.text = "Boss' confidence: " + currentTrust;
   }
 
-  public void QuitGame()
+
+
+  public void ValidateCandidate(bool accepted)
   {
-    Application.Quit();
+
+    // CAMBIAR DATE NOW POR CURRENT DATE
+    bool validationSucceded = currentRules.Validate(currentCandidate, DateTime.Now, (daysPassed + 1));
+    // TO DO LOGIC HERE
+    if (validationSucceded)
+    {
+      roundSuccesses++;
+      currentSuccessesText.text = "Successes: " + roundSuccesses;
+    }
+    else
+    {
+      roundFails++;
+      currentFailsText.text = "Fails: " + roundFails;
+    }
+    candidaFactory = CandidateFactory.GetInstance();
+    currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
+    Debug.Log(currentCandidate.name);
+    Debug.Log(currentCandidate.dob);
+    Debug.Log(currentCandidate.gender);
+    Debug.Log(currentCandidate.expiration);
+    Debug.Log("-");
   }
+  
 }
