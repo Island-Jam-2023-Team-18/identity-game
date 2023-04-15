@@ -1,0 +1,16 @@
+{
+    "name": "TestAsm",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6b5dcc2c1831f284c918d8d3ff20cb6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
