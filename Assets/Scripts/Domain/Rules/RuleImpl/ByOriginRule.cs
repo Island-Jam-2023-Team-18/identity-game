@@ -8,7 +8,7 @@ public class ByOriginRule : IRule
 
     public ByOriginRule()
     {
-        int iOrigin = new Random().Next((int)OriginType.N, (int)OriginType.W);
+        int iOrigin = new Random().Next((int)OriginType.NORTH, (int)OriginType.WEST);
         origin = (OriginType)iOrigin;
     }
     public string Stringify()

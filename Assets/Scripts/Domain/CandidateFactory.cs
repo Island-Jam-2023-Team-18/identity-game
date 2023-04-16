@@ -38,7 +38,7 @@ public class CandidateFactory
         int iGender = randomProvider.GetNumber((int)GenderType.M, (int)GenderType.NB + 1);
         GenderType gender = (GenderType)iGender;
 
-        int iOrigin = randomProvider.GetNumber((int)OriginType.N, (int)OriginType.W);
+        int iOrigin = randomProvider.GetNumber((int)OriginType.NORTH, (int)OriginType.WEST);
         OriginType origin = (OriginType)iOrigin;
 
         bool expired = randomProvider.GetNumber(0, 100) < 20;

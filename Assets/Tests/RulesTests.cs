@@ -13,7 +13,7 @@ public class RulesTests
         DateTime currentDate = new DateTime(2023, 4, 16);
         DateTime dob = new DateTime(1903, 4, 16);
 
-        Candidate candidate = new Candidate("John Doe", dob, GenderType.M, OriginType.N, DateTime.Now);
+        Candidate candidate = new Candidate("John Doe", dob, GenderType.M, OriginType.NORTH, DateTime.Now);
 
         IRule rule = new ByAgeRule();
         ValidationResult result = rule.Validate(candidate, DateTime.Now);
@@ -27,9 +27,9 @@ public class RulesTests
         int females = 0;
         int nonBinaries = 0;
 
-        Candidate maleCandidate = new Candidate("John Doe", DateTime.Now, GenderType.M, OriginType.N, DateTime.Now);
-        Candidate femaleCandidate = new Candidate("Jane Doe", DateTime.Now, GenderType.F, OriginType.N, DateTime.Now);
-        Candidate nbCandidate = new Candidate("Lorem Ipsum", DateTime.Now, GenderType.NB, OriginType.N, DateTime.Now);
+        Candidate maleCandidate = new Candidate("John Doe", DateTime.Now, GenderType.M, OriginType.NORTH, DateTime.Now);
+        Candidate femaleCandidate = new Candidate("Jane Doe", DateTime.Now, GenderType.F, OriginType.NORTH, DateTime.Now);
+        Candidate nbCandidate = new Candidate("Lorem Ipsum", DateTime.Now, GenderType.NB, OriginType.NORTH, DateTime.Now);
 
         for (int i = 0; i < 1000; i++)
         {
