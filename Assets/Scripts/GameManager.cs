@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
 
   // End Day UI
   public TextMeshProUGUI candidatesText;
-  //public TextMeshProUGUI accuracyRateText;
-  public TextMeshProUGUI trustText;
+  public TextMeshProUGUI accuracyText;
+  public GameObject clip;
 
   // Visible variables
   public float timePerDay = 10f;
@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
 
   void Start()
   {
-    Debug.Log(gameState);
     currentDate = DateTime.Today;
   }
 
@@ -122,7 +121,6 @@ public class GameManager : MonoBehaviour
   public void StartNewGame()
   {
     gameState = GameState.Game;
-    Debug.Log(gameState);
 
     mainMenuUI.SetActive(false);
     gameUI.SetActive(true);
@@ -136,7 +134,6 @@ public class GameManager : MonoBehaviour
   public void PauseGame()
   {
     gameState = GameState.Paused;
-    Debug.Log(gameState);
 
     gameUI.SetActive(false);
     pauseMenuUI.SetActive(true);
@@ -145,7 +142,6 @@ public class GameManager : MonoBehaviour
   public void ResumeGame()
   {
     gameState = GameState.Game;
-    Debug.Log(gameState);
 
     pauseMenuUI.SetActive(false);
     gameUI.SetActive(true);
@@ -154,15 +150,15 @@ public class GameManager : MonoBehaviour
   public void EndDay()
   {
     gameState = GameState.DayEnd;
-    Debug.Log(gameState);
-
+    
     // TO DO CALCULATE TRUST!!!!!!
-    currentTrust += (roundSuccesses - roundFails);
+    currentTrust += ((roundSuccesses - roundFails) - daysPassed);
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
-    //successesText.text = "Successes: " + roundSuccesses;
-    //failsText.text = "Fails: " + roundFails;
-    trustText. text = "Boss' confidence: " + currentTrust;
+
+    // calculate the accuracy rate as a percentage
+    float accuracyRate = ((float)roundSuccesses / candidatesReviewed) * 100f;
+    accuracyText.text = "Accuracy rate: " + accuracyRate.ToString("F2") + "%";
 
     gameUI.SetActive(false);
     dayEndUI.SetActive(true);
@@ -197,7 +193,6 @@ public class GameManager : MonoBehaviour
   public void GameOver()
   {
     gameState = GameState.GameOver;
-    Debug.Log(gameState);
 
     gameUI.SetActive(false);
     gameOverUI.SetActive(true);
@@ -207,7 +202,6 @@ public class GameManager : MonoBehaviour
   {
 
     gameState = GameState.MainMenu;
-    Debug.Log(gameState);
 
     gameUI.SetActive(false);
     pauseMenuUI.SetActive(false);
@@ -232,7 +226,7 @@ public class GameManager : MonoBehaviour
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
 
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
-    trustText.text = "Boss' confidence: " + currentTrust;
+    accuracyText.text = "Boss' confidence: " + currentTrust;
   }
 
 
@@ -240,7 +234,8 @@ public class GameManager : MonoBehaviour
   public void ValidateCandidate(bool accepted)
   {
 
-    // CAMBIAR DATE NOW POR CURRENT DATE
+    if (!rulesRead) return;
+
     bool validationSucceded = currentRules.Validate(currentCandidate, currentDate, (daysPassed + 1));
     // TO DO LOGIC HERE
     if (validationSucceded)
@@ -283,7 +278,6 @@ public class GameManager : MonoBehaviour
 
   public void GetNewRules()
   {
-
     rulesDate.text = currentDate.ToString("dd/MM/yyyy");
 
     currentRules = new RuleSet();
@@ -316,11 +310,6 @@ public class GameManager : MonoBehaviour
 
       rule3.gameObject.SetActive(true);
       rule3.text = "- " + rulesList[2];
-    }
-    Debug.Log(currentRules.GetDescriptions());
-    foreach (String rule in currentRules.GetDescriptions())
-    {
-      Debug.Log(rule);
     }
   }
   
