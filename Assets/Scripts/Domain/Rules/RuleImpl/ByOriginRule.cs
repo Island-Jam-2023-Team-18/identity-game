@@ -16,8 +16,8 @@ public class ByOriginRule : IRule
         return "Origin: " + origin;
     }
 
-    public bool Validate(Candidate candidate, DateTime currentDate)
+    public ValidationResult Validate(Candidate candidate, DateTime currentDate)
     {
-        return candidate.origin == origin;
+        return candidate.origin == origin ? ValidationResult.VALID : ValidationResult.ORIGIN_NOT_MATCH;
     }
 }

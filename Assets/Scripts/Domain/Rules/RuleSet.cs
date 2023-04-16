@@ -22,20 +22,22 @@ public class RuleSet
         return rules.Select(r => r.Stringify()).ToList<string>();
     }
 
-    public bool Validate(Candidate candidate, DateTime currentDate, int rulesCount)
+    public ValidationResult Validate(Candidate candidate, DateTime currentDate, int rulesCount)
     {
         if (candidate.expiration.CompareTo(currentDate) < 0)
         {
-            return false;
+            return ValidationResult.ID_EXPIRED;
         }
 
         for (int i = 0; i < rulesCount && i < rules.Count; i++)
         {
-            if (!rules.ElementAt(i).Validate(candidate, currentDate)) {
-                return false;
+            ValidationResult result = rules.ElementAt(i).Validate(candidate, currentDate);
+            if (result != ValidationResult.VALID)
+            {
+                return result;
             }
         }
 
-        return true;
+        return ValidationResult.VALID;
     }
 }

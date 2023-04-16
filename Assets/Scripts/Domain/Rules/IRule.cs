@@ -4,6 +4,6 @@ using System;
 
 public interface IRule
 {
-    bool Validate(Candidate candidate, DateTime currentDate);
+    ValidationResult Validate(Candidate candidate, DateTime currentDate);
     string Stringify();
 }

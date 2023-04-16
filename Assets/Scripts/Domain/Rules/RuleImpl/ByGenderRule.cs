@@ -11,9 +11,9 @@ public class ByGenderRule : IRule
         int iGender = new Random().Next((int)GenderType.M, (int)GenderType.NB);
         GenderType gender = (GenderType)iGender;
     }
-    public bool Validate(Candidate candidate, DateTime currentDate)
+    public ValidationResult Validate(Candidate candidate, DateTime currentDate)
     {
-        return candidate.gender == gender;
+        return candidate.gender == gender ? ValidationResult.VALID : ValidationResult.GENDER_NOT_MATCH;
     }
 
     public string Stringify()

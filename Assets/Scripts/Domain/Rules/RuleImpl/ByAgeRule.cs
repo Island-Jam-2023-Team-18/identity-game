@@ -21,10 +21,10 @@ public class ByAgeRule : IRule
         maxAge = minAge + ageRange;
     }
 
-    public bool Validate(Candidate candidate, DateTime currentDate)
+    public ValidationResult Validate(Candidate candidate, DateTime currentDate)
     {
         int age = currentDate.Subtract(candidate.dob).Days / 365;
-        return age >= minAge && age <= maxAge;
+        return age >= minAge && age <= maxAge ? ValidationResult.VALID : ValidationResult.AGE_NOT_MATCH;
     }
 
     public string Stringify()
