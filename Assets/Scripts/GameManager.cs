@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-  private enum GameState { MainMenu, Game, Paused, DayEnd, GameOver }
+  private enum GameState { MainMenu, Tutorial, Game, Paused, DayEnd, GameOver }
   private GameState gameState;
 
   // Main UI Panels
@@ -17,7 +17,11 @@ public class GameManager : MonoBehaviour
   public GameObject dayEndUI;
   public GameObject gameOverUI;
 
+  //Main Menu
+  public TextMeshProUGUI mainMenuHighscoreText;
+
   // Main Game UI
+  public GameObject tutorial;
   private bool rulesRead = false;
   public TextMeshProUGUI rulesDate;
   public TextMeshProUGUI rule1;
@@ -25,6 +29,7 @@ public class GameManager : MonoBehaviour
   public TextMeshProUGUI rule3;
   public TextMeshProUGUI rulesButtonText;
 
+  public TextMeshProUGUI PCTimeLeft;
   public TextMeshProUGUI PCName;
   public TextMeshProUGUI PCBirthDate;
   public TextMeshProUGUI PCGender;
@@ -40,6 +45,14 @@ public class GameManager : MonoBehaviour
   public TextMeshProUGUI candidatesText;
   public TextMeshProUGUI accuracyText;
   public GameObject clip;
+  public TextMeshProUGUI companyConfidence;
+  public GameObject endGameNextDayButton;
+  public GameObject endGameRevisionButton;
+  public GameObject[] clipPlaceholders = new GameObject[10];
+
+  // End Game UI
+  public TextMeshProUGUI daysSurvivedEndGame;
+  public TextMeshProUGUI candidatesReviewedEndGame;
 
   // Visible variables
   public float timePerDay = 10f;
@@ -47,7 +60,7 @@ public class GameManager : MonoBehaviour
   // Variables per run
   private int daysPassed = 0;
   private float dayTimeLeft = 10.0f;
-  private float currentTrust = 5.0f;
+  private int currentTrust = 5;
 
   private int totalSuccesses = 0;
   private int totalFails = 0;
@@ -97,6 +110,7 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     currentDate = DateTime.Today;
+    highscore = 0;
   }
 
   void Update()
@@ -110,6 +124,9 @@ public class GameManager : MonoBehaviour
         dayTimeLeft -= Time.deltaTime;
         dayTimeLeft = Mathf.Round(dayTimeLeft * 100f) * 0.01f;
         timeLeftText.text = "Day time left: " + dayTimeLeft;
+        int intValue = Mathf.RoundToInt(dayTimeLeft); // Round to nearest integer
+        string intString = intValue.ToString(); // Convert integer to string
+        PCTimeLeft.text = "TIME: " + intString; // Set UI text to integer string
         if (dayTimeLeft <= 0.1f)
         {
           EndDay();
@@ -118,27 +135,36 @@ public class GameManager : MonoBehaviour
 
       if (Input.GetKeyDown("escape")) { PauseGame(); }
 
-      if(Input.GetKeyDown(KeyCode.P)) { EndDay(); }
+      if(Input.GetKeyDown(KeyCode.O)) { EndDay(); }
 
-      if(Input.GetKeyDown(KeyCode.O)) { GameOver(); }
+      if(Input.GetKeyDown(KeyCode.P)) { GameOver(); }
 
-      if(Input.GetKeyDown(KeyCode.L)) { ToogleShowDebugInfo(); }
+      if(Input.GetKeyDown(KeyCode.K)) { ToogleShowDebugInfo(); }
 
-      if (Input.GetKeyDown(KeyCode.K)) { GetNewRules(); }
+      if (Input.GetKeyDown(KeyCode.L)) { GetNewRules(); }
     }
   }
 
   public void StartNewGame()
   {
-    gameState = GameState.Game;
+    if (gameState == GameState.MainMenu && highscore == 0)
+    {
+      tutorial.SetActive(true);
+      gameState = GameState.Tutorial;
+    }
+    else
+    {
+      tutorial.SetActive(false);
+      gameState = GameState.Game;
 
-    mainMenuUI.SetActive(false);
-    gameUI.SetActive(true);
+      mainMenuUI.SetActive(false);
+      gameUI.SetActive(true);
 
-    dayTimeLeft = timePerDay;
+      dayTimeLeft = timePerDay;
 
-    GetNewRules();
-    GetNewCandidate();
+      GetNewRules();
+      GetNewCandidate();
+    }
   }
 
   public void PauseGame()
@@ -163,12 +189,27 @@ public class GameManager : MonoBehaviour
     
     // TO DO CALCULATE TRUST!!!!!!
     currentTrust += ((roundSuccesses - roundFails) - daysPassed);
+    if(currentTrust <= 0) {
+      currentTrust = 0;
+      endGameNextDayButton.SetActive(false);
+      endGameRevisionButton.SetActive(true);
+    }
+    else
+    {
+      endGameNextDayButton.SetActive(true);
+      endGameRevisionButton.SetActive(false);
+    }
+    if(currentTrust >= 10) { currentTrust = 0; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
 
     // calculate the accuracy rate as a percentage
     float accuracyRate = ((float)roundSuccesses / candidatesReviewed) * 100f;
     accuracyText.text = "Accuracy rate: " + accuracyRate.ToString("F2") + "%";
+
+    (clip.transform as RectTransform).anchoredPosition = (clipPlaceholders[currentTrust].gameObject.transform as RectTransform).anchoredPosition;
+
+    companyConfidence.text = "ROLE CONFIDENCE: " + currentTrust;
 
     gameUI.SetActive(false);
     dayEndUI.SetActive(true);
@@ -204,7 +245,11 @@ public class GameManager : MonoBehaviour
   {
     gameState = GameState.GameOver;
 
+    daysSurvivedEndGame.text = "DAYS SURVIVED: " + daysPassed;
+    candidatesReviewedEndGame.text = "CANDIDATES REVIEWED: " + (totalSuccesses + totalFails);
+
     gameUI.SetActive(false);
+    dayEndUI.SetActive(false);
     gameOverUI.SetActive(true);
   }
 
@@ -223,7 +268,14 @@ public class GameManager : MonoBehaviour
     daysPassed = 0;
     daysPassedText.text = "Days passed: " + daysPassed;
     dayTimeLeft = 10.0f;
-    currentTrust = 50.0f;
+    currentTrust = 5;
+
+    if(highscore < daysPassed) {
+      highscore = daysPassed;
+      mainMenuHighscoreText.gameObject.SetActive(true);
+      mainMenuHighscoreText.text = "HIGHSCORE: " + highscore;
+    }
+
 
     totalSuccesses = 0;
     totalFails = 0;
@@ -349,6 +401,12 @@ public class GameManager : MonoBehaviour
       rule3.gameObject.SetActive(true);
       rule3.text = "- " + rulesList[2];
     }
+  }
+
+
+  public void CloseTutorial()
+  {
+    tutorial.SetActive(false);
   }
 
   public void QuiGame()
