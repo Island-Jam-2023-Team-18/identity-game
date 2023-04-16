@@ -17,7 +17,14 @@ public class GameManager : MonoBehaviour
   public GameObject dayEndUI;
   public GameObject gameOverUI;
 
-  // Game UI
+  // Main Game UI
+  private bool rulesRead = false;
+  public TextMeshProUGUI rulesDate;
+  public TextMeshProUGUI rule1;
+  public TextMeshProUGUI rule2;
+  public TextMeshProUGUI rule3;
+  public TextMeshProUGUI rulesButtonText;
+
   public TextMeshProUGUI PCName;
   public TextMeshProUGUI PCBirthDate;
   public TextMeshProUGUI PCGender;
@@ -34,7 +41,6 @@ public class GameManager : MonoBehaviour
   // Visible variables
   public float timePerDay = 10f;
 
-  //TO DO
   // Variables per run
   private int daysPassed = 0;
   private float dayTimeLeft = 10.0f;
@@ -42,6 +48,8 @@ public class GameManager : MonoBehaviour
 
   private int totalSuccesses = 0;
   private int totalFails = 0;
+
+  private DateTime currentDate;
 
   // Variables per round
   private int roundSuccesses = 0;
@@ -60,7 +68,6 @@ public class GameManager : MonoBehaviour
   Candidate currentCandidate;
   //current rules
   RuleSet currentRules;
-  //curren
 
   private void Awake()
   {
@@ -85,6 +92,7 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     Debug.Log(gameState);
+    currentDate = DateTime.Today;
   }
 
   void Update()
@@ -92,17 +100,18 @@ public class GameManager : MonoBehaviour
 
     if (gameState == GameState.Game)
     {
-
       //candidateTimeLeft -= Time.deltaTime;
-
-      dayTimeLeft -= Time.deltaTime;
-      dayTimeLeft = Mathf.Round(dayTimeLeft * 100f) * 0.01f;
-      //dayTimeLeft = Mathf.round(dayTimeLeft);
-      timeLeftText.text = "Day time left: " + dayTimeLeft;
-      if (dayTimeLeft <= 0.1f)
+      if (rulesRead)
       {
-        EndDay();
+        dayTimeLeft -= Time.deltaTime;
+        dayTimeLeft = Mathf.Round(dayTimeLeft * 100f) * 0.01f;
+        timeLeftText.text = "Day time left: " + dayTimeLeft;
+        if (dayTimeLeft <= 0.1f)
+        {
+          EndDay();
+        }
       }
+
       if (Input.GetKey("escape"))
       {
         PauseGame();
@@ -120,8 +129,8 @@ public class GameManager : MonoBehaviour
 
     dayTimeLeft = timePerDay;
 
+    GetNewRules();
     GetNewCandidate();
-    currentRules = new RuleSet();
   }
 
   public void PauseGame()
@@ -163,15 +172,11 @@ public class GameManager : MonoBehaviour
   {
     daysPassed += 1;
     daysPassedText.text = "Days passed: " + daysPassed;
+    currentDate.AddDays(1);
 
-    currentRules = new RuleSet();
-    Debug.Log("XXXX");
-    Debug.Log(currentRules.GetDescriptions());
-    foreach(String rule in currentRules.GetDescriptions())
-    {
-      Debug.Log(rule);
-    }
-    Debug.Log("XXXX");
+    GetNewRules();
+
+    rulesRead = false;
 
     totalSuccesses += roundSuccesses;
     roundSuccesses = 0;
@@ -184,7 +189,6 @@ public class GameManager : MonoBehaviour
     dayTimeLeft = timePerDay;
 
     gameState = GameState.Game;
-    Debug.Log(gameState);
 
     dayEndUI.SetActive(false);
     gameUI.SetActive(true);
@@ -237,7 +241,7 @@ public class GameManager : MonoBehaviour
   {
 
     // CAMBIAR DATE NOW POR CURRENT DATE
-    bool validationSucceded = currentRules.Validate(currentCandidate, DateTime.Now, (daysPassed + 1));
+    bool validationSucceded = currentRules.Validate(currentCandidate, currentDate, (daysPassed + 1));
     // TO DO LOGIC HERE
     if (validationSucceded)
     {
@@ -267,6 +271,57 @@ public class GameManager : MonoBehaviour
 
     // tint the image to the random color
     candidateSilouette.color = randomColor;
+  }
+
+  public void CheckRulesRead()
+  {
+    if (rulesRead == false) rulesRead = true;
+    if (rulesButtonText.text == "GO!") rulesButtonText.text = "RULES";
+    else rulesButtonText.text = "GO!";
+    
+  }
+
+  public void GetNewRules()
+  {
+
+    rulesDate.text = currentDate.ToString("dd/MM/yyyy");
+
+    currentRules = new RuleSet();
+    List<String> rulesList = currentRules.GetDescriptions();
+    if (daysPassed == 0)
+    {
+      rule1.gameObject.SetActive(true);
+      rule1.text = "- " + rulesList[0];
+
+      rule2.gameObject.SetActive(false);
+      rule3.gameObject.SetActive(false);
+    }
+    else if (daysPassed == 1)
+    {
+      rule1.gameObject.SetActive(true);
+      rule1.text = "- " + rulesList[0];
+
+      rule2.gameObject.SetActive(true);
+      rule2.text = "- " + rulesList[1];
+
+      rule3.gameObject.SetActive(false);
+    }
+    else
+    {
+      rule1.gameObject.SetActive(true);
+      rule1.text = "- " + rulesList[0];
+
+      rule2.gameObject.SetActive(true);
+      rule2.text = "- " + rulesList[1];
+
+      rule3.gameObject.SetActive(true);
+      rule3.text = "- " + rulesList[2];
+    }
+    Debug.Log(currentRules.GetDescriptions());
+    foreach (String rule in currentRules.GetDescriptions())
+    {
+      Debug.Log(rule);
+    }
   }
   
 }
