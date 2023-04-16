@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip passClip;
     [SerializeField] private AudioClip denyClip;
     [SerializeField] private AudioClip rulesShowClip;
+    [SerializeField] private AudioClip rulesHideClip;
     [SerializeField] private AudioClip pauseClip;
     [SerializeField] private AudioClip exitClip;
     [SerializeField] private AudioClip validClip;
@@ -19,11 +20,62 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip trustSlideClip;
     [SerializeField] private AudioClip hiScoreClip;
     [SerializeField] private AudioClip backGroundClip;
+    [SerializeField] private AudioClip gameMusicClip;
+    [SerializeField] private AudioClip endDayPositiveClip;
+    [SerializeField] private AudioClip endDayNegativeClip;
+    [SerializeField] private AudioClip menuMusicClip;
+    [SerializeField] private AudioClip endGameMusic;
+
+    public void PlayEndGameMusic()
+    {
+        musicSource.clip = endGameMusic;
+        musicSource.loop = false;
+        musicSource.Play();
+    }
+
+    public void PlayGameMusic()
+    {
+        musicSource.clip = gameMusicClip;
+        musicSource.loop = true;
+        musicSource.Play();
+    }
+
+    public void PlayEndDayPositiveMusic()
+    {
+        musicSource.clip = endDayPositiveClip;
+        musicSource.loop = false;
+        musicSource.Play();
+    }
+
+    public void PlayEndDayNegativeMusic()
+    {
+        musicSource.clip = endDayNegativeClip;
+        musicSource.loop = false;
+        musicSource.Play();
+    }
+
+    public void PlayMenuMusic()
+    {
+        musicSource.clip = menuMusicClip;
+        musicSource.loop = true;
+        musicSource.Play();
+    }
+
+    public void StopMusic()
+    {
+        musicSource.Stop();
+    }
 
     public void StartBackgroundNoise()
     {
         backgroundSource.clip = backGroundClip;
         backgroundSource.Play();
+    }
+
+    public void RulesHide()
+    {
+        fxSource.clip = rulesHideClip;
+        fxSource.Play();
     }
 
     public void StopBackgroundNoise()
