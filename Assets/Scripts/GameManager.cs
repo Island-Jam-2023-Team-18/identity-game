@@ -16,6 +16,13 @@ public class GameManager : MonoBehaviour
   public GameObject dayEndUI;
   public GameObject gameOverUI;
 
+  // Game UI
+  public TextMeshProUGUI PCName;
+  public TextMeshProUGUI PCBirthDate;
+  public TextMeshProUGUI PCGender;
+  public TextMeshProUGUI PCProvenance;
+  public TextMeshProUGUI PCExpirationDate;
+
   // End Day UI
   public TextMeshProUGUI candidatesText;
   //public TextMeshProUGUI accuracyRateText;
@@ -110,12 +117,7 @@ public class GameManager : MonoBehaviour
 
     dayTimeLeft = timePerDay;
 
-    candidaFactory = CandidateFactory.GetInstance();
-    currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
-    Debug.Log(currentCandidate.name);
-    Debug.Log(currentCandidate.dob);
-    Debug.Log(currentCandidate.gender);
-    Debug.Log(currentCandidate.expiration);
+    GetNewCandidate();
     currentRules = new RuleSet();
   }
 
@@ -244,13 +246,18 @@ public class GameManager : MonoBehaviour
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
     }
+    GetNewCandidate();
+  }
+
+  private void GetNewCandidate()
+  {
     candidaFactory = CandidateFactory.GetInstance();
     currentCandidate = candidaFactory.GetCandidate(DateTime.Now);
-    Debug.Log(currentCandidate.name);
-    Debug.Log(currentCandidate.dob);
-    Debug.Log(currentCandidate.gender);
-    Debug.Log(currentCandidate.expiration);
-    Debug.Log("-");
+    PCName.text = currentCandidate.name.ToString();
+    PCBirthDate.text = currentCandidate.dob.Date.ToString("dd/MM/yyyy");
+    PCGender.text = currentCandidate.gender.ToString();
+    PCProvenance.text = currentCandidate.origin.ToString();
+    PCExpirationDate.text = currentCandidate.expiration.Date.ToString("dd/MM/yyyy");
   }
   
 }
