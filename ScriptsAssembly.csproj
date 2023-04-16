@@ -56,23 +56,23 @@
     <Analyzer Include="D:\Software\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Domain\Rules\ValidationResult.cs" />
+    <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByGenderRule.cs" />
+    <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByAgeRule.cs" />
     <Compile Include="Assets\Scripts\Domain\Candidate.cs" />
-    <Compile Include="Assets\Scripts\Domain\GenderType.cs" />
-    <Compile Include="Assets\Scripts\Domain\OriginType.cs" />
+    <Compile Include="Assets\Scripts\Domain\Rules\RuleFactory.cs" />
     <Compile Include="Assets\Scripts\Domain\CandidateFactory.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Domain\NameProvider.cs" />
+    <Compile Include="Assets\Scripts\Utils\IRandomProvider.cs" />
+    <Compile Include="Assets\Scripts\Domain\GenderType.cs" />
+    <Compile Include="Assets\Scripts\Utils\RandomProvider.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\RuleType.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\IRule.cs" />
-    <Compile Include="Assets\Scripts\Domain\Rules\RuleFactory.cs" />
-    <Compile Include="Assets\Scripts\Domain\Rules\RuleSet.cs" />
-    <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByAgeRule.cs" />
-    <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByGenderRule.cs" />
+    <Compile Include="Assets\Scripts\Domain\OriginType.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByOriginRule.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Utils\IRandomProvider.cs" />
-    <Compile Include="Assets\Scripts\Utils\RandomProvider.cs" />
-    <Compile Include="Assets\Scripts\Domain\NameProvider.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
-    <Compile Include="Assets\Scripts\Domain\Rules\ValidationResult.cs" />
+    <Compile Include="Assets\Scripts\Domain\Rules\RuleSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\ScriptsAssembly.asmdef" />
