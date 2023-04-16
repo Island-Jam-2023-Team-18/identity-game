@@ -8,8 +8,8 @@ public class ByGenderRule : IRule
 
     public ByGenderRule()
     {
-        int iGender = new Random().Next((int)GenderType.M, (int)GenderType.NB);
-        GenderType gender = (GenderType)iGender;
+        int iGender = new Random().Next((int)GenderType.M, (int)GenderType.NB + 1);
+        gender = (GenderType)iGender;
     }
     public ValidationResult Validate(Candidate candidate, DateTime currentDate)
     {

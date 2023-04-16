@@ -22,4 +22,25 @@ public class CandidateTests
             Debug.Log("Test candidate: " + candidate.name);
         }
     }
+
+    [Test]
+    public void CreatedCandidateShouldGenerateNonBinaryOnes()
+    {
+        int nbs = 0;
+        CandidateFactory factory = CandidateFactory.GetInstance();
+
+        for (int i = 0; i < 1000; i++)
+        {
+            Candidate candidate = factory.GetCandidate(DateTime.Now);
+
+            if (candidate.gender == GenderType.NB)
+            {
+                nbs++;
+            }
+
+            Debug.Log("Test candidate gender: " + candidate.gender);
+        }
+
+        Assert.Greater(nbs, 0, "Should have some NB candidates");
+    }
 }

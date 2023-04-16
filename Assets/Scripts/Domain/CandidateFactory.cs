@@ -35,7 +35,7 @@ public class CandidateFactory
         int age = randomProvider.GetNumber(18, 65);
         DateTime dob = currentDate.AddYears(-age);
 
-        int iGender = randomProvider.GetNumber((int)GenderType.M, (int)GenderType.NB);
+        int iGender = randomProvider.GetNumber((int)GenderType.M, (int)GenderType.NB + 1);
         GenderType gender = (GenderType)iGender;
 
         int iOrigin = randomProvider.GetNumber((int)OriginType.N, (int)OriginType.W);
