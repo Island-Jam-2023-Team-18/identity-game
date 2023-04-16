@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum OriginType
 {
-    N,
-    S,
-    E,
-    W
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST
 }
