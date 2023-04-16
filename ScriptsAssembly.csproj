@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Utils\IRandomProvider.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomProvider.cs" />
     <Compile Include="Assets\Scripts\Domain\NameProvider.cs" />
+    <Compile Include="Assets\Scripts\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\ScriptsAssembly.asmdef" />
