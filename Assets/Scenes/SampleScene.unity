@@ -1496,6 +1496,7 @@ MonoBehaviour:
   PCGender: {fileID: 308365174}
   PCProvenance: {fileID: 1936425476}
   PCExpirationDate: {fileID: 293067884}
+  candidateSilouette: {fileID: 1830101641}
   candidatesText: {fileID: 1200871095}
   trustText: {fileID: 1252097083}
   timePerDay: 10

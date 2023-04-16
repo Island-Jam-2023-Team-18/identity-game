@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
   public TextMeshProUGUI PCGender;
   public TextMeshProUGUI PCProvenance;
   public TextMeshProUGUI PCExpirationDate;
+
+  public Image candidateSilouette;
 
   // End Day UI
   public TextMeshProUGUI candidatesText;
@@ -258,6 +261,12 @@ public class GameManager : MonoBehaviour
     PCGender.text = currentCandidate.gender.ToString();
     PCProvenance.text = currentCandidate.origin.ToString();
     PCExpirationDate.text = currentCandidate.expiration.Date.ToString("dd/MM/yyyy");
+
+    // create a random color
+    Color randomColor = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+
+    // tint the image to the random color
+    candidateSilouette.color = randomColor;
   }
   
 }
