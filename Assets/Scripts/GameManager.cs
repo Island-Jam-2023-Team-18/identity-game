@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour
 
   private DateTime currentDate;
 
+  private int highscore = 0;
+
   // Variables per round
   private int roundSuccesses = 0;
   private int roundFails = 0;
@@ -259,15 +261,19 @@ public class GameManager : MonoBehaviour
       switch(validationresult)
       {
         case ValidationResult.ID_EXPIRED:
+          Debug.Log("ID EXPIRED");
           break;
 
         case ValidationResult.AGE_NOT_MATCH:
+          Debug.Log("AGE DON'T MATCH");
           break;
 
         case ValidationResult.GENDER_NOT_MATCH:
+          Debug.Log("GENDER DON'T MATCH");
           break;
 
         case ValidationResult.ORIGIN_NOT_MATCH:
+          Debug.Log("ORIGIN DON'T MATCH");
           break;
 
       }
