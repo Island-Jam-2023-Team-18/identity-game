@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
 
   public Image candidateSilouette;
 
+  public GameObject ingameDebug;
+  private bool debugActive = false;
+
   // End Day UI
   public TextMeshProUGUI candidatesText;
   public TextMeshProUGUI accuracyText;
@@ -44,7 +47,7 @@ public class GameManager : MonoBehaviour
   // Variables per run
   private int daysPassed = 0;
   private float dayTimeLeft = 10.0f;
-  private float currentTrust = 50.0f;
+  private float currentTrust = 5.0f;
 
   private int totalSuccesses = 0;
   private int totalFails = 0;
@@ -111,10 +114,15 @@ public class GameManager : MonoBehaviour
         }
       }
 
-      if (Input.GetKey("escape"))
-      {
-        PauseGame();
-      }
+      if (Input.GetKeyDown("escape")) { PauseGame(); }
+
+      if(Input.GetKeyDown(KeyCode.P)) { EndDay(); }
+
+      if(Input.GetKeyDown(KeyCode.O)) { GameOver(); }
+
+      if(Input.GetKeyDown(KeyCode.L)) { ToogleShowDebugInfo(); }
+
+      if (Input.GetKeyDown(KeyCode.K)) { GetNewRules(); }
     }
   }
 
@@ -236,19 +244,43 @@ public class GameManager : MonoBehaviour
 
     if (!rulesRead) return;
 
-    bool validationSucceded = currentRules.Validate(currentCandidate, currentDate, (daysPassed + 1));
+    ValidationResult validationresult = currentRules.Validate(currentCandidate, currentDate, (daysPassed));
     // TO DO LOGIC HERE
-    if (validationSucceded)
+
+
+    if (validationresult == ValidationResult.VALID)
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
     }
     else
     {
+      // TO DO
+      switch(validationresult)
+      {
+        case ValidationResult.ID_EXPIRED:
+          break;
+
+        case ValidationResult.AGE_NOT_MATCH:
+          break;
+
+        case ValidationResult.GENDER_NOT_MATCH:
+          break;
+
+        case ValidationResult.ORIGIN_NOT_MATCH:
+          break;
+
+      }
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
     }
     GetNewCandidate();
+  }
+
+  private void ToogleShowDebugInfo()
+  {
+    debugActive = !debugActive;
+    ingameDebug.SetActive(debugActive);
   }
 
   private void GetNewCandidate()
@@ -311,6 +343,12 @@ public class GameManager : MonoBehaviour
       rule3.gameObject.SetActive(true);
       rule3.text = "- " + rulesList[2];
     }
+  }
+
+  public void QuiGame()
+  {
+    Application.Quit();
+    Debug.Log("PA' FUERA");
   }
   
 }
