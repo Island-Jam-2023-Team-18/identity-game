@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     name: Build ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
@@ -34,30 +34,17 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
 
       # Tests
-      #- name: Run tests
-      #  uses: game-ci/unity-test-runner@v2
-      #  with:
-      #    testMode: editmode
-      #    checkName: Test Results
-      #    coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-
-      #- uses: actions/upload-artifact@v2
-      #  if: always()
-      #  with:
-      #    name: Test results for Unit Tests
-      #    path: ${{ steps.tests.outputs.artifactsPath }}
-
-      #- uses: actions/upload-artifact@v2
-      #  if: always()
-      #  with:
-      #    name: Coverage results for ${{ matrix.testMode }}
-      #    path: ${{ steps.tests.outputs.coveragePath }}
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
+        with:
+          testMode: EditMode
 
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v2
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: KurroPlease
 
       # Zip build folder
       - name: Zip build folder
