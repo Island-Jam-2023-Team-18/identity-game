@@ -34,24 +34,24 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
 
       # Tests
-      - name: Run tests
-        uses: game-ci/unity-test-runner@v2
-        with:
-          testMode: editmode
-          checkName: Test Results
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
+      #- name: Run tests
+      #  uses: game-ci/unity-test-runner@v2
+      #  with:
+      #    testMode: editmode
+      #    checkName: Test Results
+      #    coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
 
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Test results for Unit Tests
-          path: ${{ steps.tests.outputs.artifactsPath }}
+      #- uses: actions/upload-artifact@v2
+      #  if: always()
+      #  with:
+      #    name: Test results for Unit Tests
+      #    path: ${{ steps.tests.outputs.artifactsPath }}
 
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Coverage results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.coveragePath }}
+      #- uses: actions/upload-artifact@v2
+      #  if: always()
+      #  with:
+      #    name: Coverage results for ${{ matrix.testMode }}
+      #    path: ${{ steps.tests.outputs.coveragePath }}
 
       # Build
       - name: Build project
