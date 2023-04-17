@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public enum GenderType
 {
-    M,
-    F,
-    NB
+  M,
+  F,
+  NB
 }

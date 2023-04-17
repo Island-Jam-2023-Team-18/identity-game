@@ -4,25 +4,26 @@ using System;
 
 public class RandomProvider : IRandomProvider
 {
-    private static IRandomProvider instance = null;
-    private Random random;
+  private static IRandomProvider instance = null;
+  private Random random;
 
-    private RandomProvider() {
-        random = new Random();
-    }
+  private RandomProvider()
+  {
+    random = new Random();
+  }
 
-    public static IRandomProvider GetInstance()
+  public static IRandomProvider GetInstance()
+  {
+    if (instance == null)
     {
-        if (instance == null)
-        {
-            instance = new RandomProvider();
-        }
-
-        return instance;
+      instance = new RandomProvider();
     }
 
-    public int GetNumber(int min, int max)
-    {
-        return random.Next(min, max);
-    }
+    return instance;
+  }
+
+  public int GetNumber(int min, int max)
+  {
+    return random.Next(min, max);
+  }
 }

@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
   // Visible variables
   public float timePerDay = 10f;
 
-    // Sound management ref
-    public SoundManager soundManager;
+  // Sound management ref
+  public SoundManager soundManager;
 
   // Variables per run
   private int daysPassed = 0;
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
     dayEndUI.SetActive(false);
     gameOverUI.SetActive(false);
 
-        soundManager.PlayGameMusic();
+    soundManager.PlayGameMusic();
 
   }
 
@@ -140,11 +140,11 @@ public class GameManager : MonoBehaviour
 
       if (Input.GetKeyDown("escape")) { PauseGame(); }
 
-      if(Input.GetKeyDown(KeyCode.O)) { EndDay(); }
+      if (Input.GetKeyDown(KeyCode.O)) { EndDay(); }
 
-      if(Input.GetKeyDown(KeyCode.P)) { GameOver(); }
+      if (Input.GetKeyDown(KeyCode.P)) { GameOver(); }
 
-      if(Input.GetKeyDown(KeyCode.K)) { ToogleShowDebugInfo(); }
+      if (Input.GetKeyDown(KeyCode.K)) { ToogleShowDebugInfo(); }
 
       if (Input.GetKeyDown(KeyCode.L)) { GetNewRules(); }
     }
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
 
   public void StartNewGame()
   {
-        soundManager.StopMusic();
+    soundManager.StopMusic();
     if (gameState == GameState.MainMenu && highscore == 0)
     {
       tutorial.SetActive(true);
@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-            soundManager.StartBackgroundNoise();
+      soundManager.StartBackgroundNoise();
       tutorial.SetActive(false);
       gameState = GameState.Game;
 
@@ -192,24 +192,25 @@ public class GameManager : MonoBehaviour
 
   public void EndDay()
   {
-        soundManager.StopBackgroundNoise();
+    soundManager.StopBackgroundNoise();
     gameState = GameState.DayEnd;
-    
+
     // TO DO CALCULATE TRUST!!!!!!
     currentTrust += ((roundSuccesses - roundFails) - daysPassed);
-    if(currentTrust <= 0) {
+    if (currentTrust <= 0)
+    {
       currentTrust = 0;
       endGameNextDayButton.SetActive(false);
       endGameRevisionButton.SetActive(true);
-            soundManager.PlayEndDayNegativeMusic();
+      soundManager.PlayEndDayNegativeMusic();
     }
     else
     {
       endGameNextDayButton.SetActive(true);
       endGameRevisionButton.SetActive(false);
-            soundManager.PlayEndDayPositiveMusic();
+      soundManager.PlayEndDayPositiveMusic();
     }
-    if(currentTrust >= 10) { currentTrust = 0; }
+    if (currentTrust >= 10) { currentTrust = 0; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
 
@@ -227,8 +228,8 @@ public class GameManager : MonoBehaviour
 
   public void NextDay()
   {
-        soundManager.StopMusic();
-        soundManager.StartBackgroundNoise();
+    soundManager.StopMusic();
+    soundManager.StartBackgroundNoise();
     daysPassed += 1;
     daysPassedText.text = "Days passed: " + daysPassed;
     currentDate.AddDays(1);
@@ -255,8 +256,8 @@ public class GameManager : MonoBehaviour
 
   public void GameOver()
   {
-        soundManager.StopBackgroundNoise();
-        soundManager.PlayEndGameMusic();
+    soundManager.StopBackgroundNoise();
+    soundManager.PlayEndGameMusic();
     gameState = GameState.GameOver;
 
     daysSurvivedEndGame.text = "DAYS SURVIVED: " + daysPassed;
@@ -284,7 +285,8 @@ public class GameManager : MonoBehaviour
     dayTimeLeft = 10.0f;
     currentTrust = 5;
 
-    if(highscore < daysPassed) {
+    if (highscore < daysPassed)
+    {
       highscore = daysPassed;
       mainMenuHighscoreText.gameObject.SetActive(true);
       mainMenuHighscoreText.text = "HIGHSCORE: " + highscore;
@@ -293,7 +295,7 @@ public class GameManager : MonoBehaviour
 
     totalSuccesses = 0;
     totalFails = 0;
-    
+
     roundSuccesses = 0;
     currentSuccessesText.text = "Round successes: " + roundSuccesses;
 
@@ -304,21 +306,21 @@ public class GameManager : MonoBehaviour
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
     accuracyText.text = "Boss' confidence: " + currentTrust;
 
-        soundManager.PlayGameMusic();
+    soundManager.PlayGameMusic();
   }
 
 
 
   public void ValidateCandidate(bool accepted)
   {
-        if (accepted)
-        {
-            soundManager.Pass();
-        }
-        else
-        {
-            soundManager.Deny();
-        }
+    if (accepted)
+    {
+      soundManager.Pass();
+    }
+    else
+    {
+      soundManager.Deny();
+    }
 
     if (!rulesRead) return;
 
@@ -330,12 +332,12 @@ public class GameManager : MonoBehaviour
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
-            StartCoroutine(PlayResultSound(true));
+      StartCoroutine(PlayResultSound(true));
     }
     else
     {
       // TO DO
-      switch(validationresult)
+      switch (validationresult)
       {
         case ValidationResult.ID_EXPIRED:
           Debug.Log("ID EXPIRED");
@@ -357,7 +359,7 @@ public class GameManager : MonoBehaviour
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
 
-            StartCoroutine(PlayResultSound(false));
+      StartCoroutine(PlayResultSound(false));
     }
     GetNewCandidate();
   }
@@ -388,17 +390,17 @@ public class GameManager : MonoBehaviour
   public void CheckRulesRead()
   {
     if (rulesRead == false) rulesRead = true;
-        if (rulesButtonText.text == "GO!")
-        {
-            rulesButtonText.text = "RULES";
-            soundManager.RulesHide();
-        }
-        else
-        {
-            rulesButtonText.text = "GO!";
-            soundManager.ShowRules();
-        }
-    
+    if (rulesButtonText.text == "GO!")
+    {
+      rulesButtonText.text = "RULES";
+      soundManager.RulesHide();
+    }
+    else
+    {
+      rulesButtonText.text = "GO!";
+      soundManager.ShowRules();
+    }
+
   }
 
   public void GetNewRules()
@@ -450,17 +452,17 @@ public class GameManager : MonoBehaviour
     Debug.Log("PA' FUERA");
   }
 
-    public IEnumerator PlayResultSound(bool success)
+  public IEnumerator PlayResultSound(bool success)
+  {
+    yield return new WaitForSeconds(.2f);
+    if (success)
     {
-        yield return new WaitForSeconds(.2f);
-        if (success)
-        {
-            soundManager.Valid();
-        }
-        else
-        {
-            soundManager.NotValid();
-        }
+      soundManager.Valid();
     }
-  
+    else
+    {
+      soundManager.NotValid();
+    }
+  }
+
 }

@@ -6,40 +6,40 @@ using UnityEngine.TestTools;
 
 public class NameProviderTests
 {
-    class MockRandomProvider : IRandomProvider
+  class MockRandomProvider : IRandomProvider
+  {
+    private readonly int mockValue;
+
+    public MockRandomProvider(int mockValue)
     {
-        private readonly int mockValue;
-
-        public MockRandomProvider(int mockValue)
-        {
-            this.mockValue = mockValue;
-        }
-
-        public int GetNumber(int min, int max)
-        {
-            return mockValue;
-        }
+      this.mockValue = mockValue;
     }
 
-    // A Test behaves as an ordinary method
-    [Test]
-    public void NameProviderBuilderShouldGiveANonNullObject()
+    public int GetNumber(int min, int max)
     {
-        NameProvider.NameProviderBuilder builder = new NameProvider.NameProviderBuilder();
-        NameProvider nameProvider = builder.Build();
-        Assert.NotNull(nameProvider);
+      return mockValue;
     }
+  }
 
-    [Test]
-    public void NameProviderShouldGiveFirstAvailableNameAndFirstAvailableSurname()
-    {
-        IRandomProvider mockRandomProvider = new MockRandomProvider(0);
-        NameProvider.NameProviderBuilder builder = new NameProvider.NameProviderBuilder();
-        NameProvider nameProvider = builder
-            .SetRandomProvider(mockRandomProvider)
-            .Build();
+  // A Test behaves as an ordinary method
+  [Test]
+  public void NameProviderBuilderShouldGiveANonNullObject()
+  {
+    NameProvider.NameProviderBuilder builder = new NameProvider.NameProviderBuilder();
+    NameProvider nameProvider = builder.Build();
+    Assert.NotNull(nameProvider);
+  }
 
-        string name = nameProvider.GetFullName();
-        Assert.AreEqual(name, "Emma Smith");
-    }
+  [Test]
+  public void NameProviderShouldGiveFirstAvailableNameAndFirstAvailableSurname()
+  {
+    IRandomProvider mockRandomProvider = new MockRandomProvider(0);
+    NameProvider.NameProviderBuilder builder = new NameProvider.NameProviderBuilder();
+    NameProvider nameProvider = builder
+        .SetRandomProvider(mockRandomProvider)
+        .Build();
+
+    string name = nameProvider.GetFullName();
+    Assert.AreEqual(name, "Emma Smith");
+  }
 }

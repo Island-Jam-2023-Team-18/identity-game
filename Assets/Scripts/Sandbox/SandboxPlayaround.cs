@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class SandboxPlayaround : MonoBehaviour
 {
-    [SerializeField] private SoundManager soundManager;
+  [SerializeField] private SoundManager soundManager;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        soundManager.PlayGameMusic();
-    }
+  // Start is called before the first frame update
+  void Start()
+  {
+    soundManager.PlayGameMusic();
+  }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  // Update is called once per frame
+  void Update()
+  {
+
+  }
 }

@@ -3,36 +3,36 @@ using System.Collections.Generic;
 
 public class NameProvider
 {
-    public class NameProviderBuilder
+  public class NameProviderBuilder
+  {
+    private IRandomProvider randomProvider;
+
+    public NameProviderBuilder()
     {
-        private IRandomProvider randomProvider;
-
-        public NameProviderBuilder()
-        {
-            randomProvider = RandomProvider.GetInstance();
-        }
-
-        public NameProviderBuilder SetRandomProvider (IRandomProvider randomProvider)
-        {
-            this.randomProvider = randomProvider;
-            return this;
-        }
-
-        public NameProvider Build()
-        {
-            return new NameProvider(randomProvider);
-        }
+      randomProvider = RandomProvider.GetInstance();
     }
 
-    private readonly IRandomProvider randomProvider;
-    private readonly string[] names;
-    private readonly string[] surnames;
-
-    private NameProvider(IRandomProvider randomProvider)
+    public NameProviderBuilder SetRandomProvider(IRandomProvider randomProvider)
     {
-        this.randomProvider = randomProvider;
+      this.randomProvider = randomProvider;
+      return this;
+    }
 
-        names = new string[] {
+    public NameProvider Build()
+    {
+      return new NameProvider(randomProvider);
+    }
+  }
+
+  private readonly IRandomProvider randomProvider;
+  private readonly string[] names;
+  private readonly string[] surnames;
+
+  private NameProvider(IRandomProvider randomProvider)
+  {
+    this.randomProvider = randomProvider;
+
+    names = new string[] {
             "Emma", "David", "Aria", "Samuel", "Isabella", "Ethan", "Mia", "Noah", "Sophia", "Liam",
             "Ava", "Alexander", "Olivia", "Benjamin", "Charlotte", "James", "Amelia", "William", "Harper",
             "Elijah", "Emily", "Michael", "Abigail", "Lucas", "Elizabeth", "Mason", "Sofia", "Daniel",
@@ -47,7 +47,7 @@ public class NameProvider
             "Tyler"
         };
 
-        surnames = new string[] {
+    surnames = new string[] {
             "Smith", "Garcia", "Brown", "Johnson", "Miller", "Gonzalez", "Davis", "Martinez", "Rodriguez", "Wilson",
             "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Moore", "Young", "Allen",
             "King", "Wright", "Scott", "Green", "Baker", "Adams", "Nelson", "Carter", "Mitchell", "Perez",
@@ -59,16 +59,16 @@ public class NameProvider
             "Graham", "Sullivan", "Wallace", "Woods", "Cole", "West", "Jordan", "Owens", "Reynolds", "Fisher",
             "Ellis", "Harrison", "Gibson", "Mcdonald", "Cruz", "Marshall", "Ortiz", "Medina", "Gomez", "Murray"
         };
-    }
+  }
 
-    public string GetFullName()
-    {
-        int nameIndex = randomProvider.GetNumber(0, 99);
-        string name = names[nameIndex];
+  public string GetFullName()
+  {
+    int nameIndex = randomProvider.GetNumber(0, 99);
+    string name = names[nameIndex];
 
-        int surnameIndex = randomProvider.GetNumber(0, 99);
-        string surname = surnames[surnameIndex];
+    int surnameIndex = randomProvider.GetNumber(0, 99);
+    string surname = surnames[surnameIndex];
 
-        return name + " " + surname;
-    }
+    return name + " " + surname;
+  }
 }
