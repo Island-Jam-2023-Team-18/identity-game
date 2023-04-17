@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Domain\Rules\RuleImpl\ByOriginRule.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Domain\Rules\RuleSet.cs" />
+    <Compile Include="Assets\Scripts\Sandbox\SandboxPlayaround.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\ScriptsAssembly.asmdef" />

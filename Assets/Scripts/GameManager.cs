@@ -57,6 +57,9 @@ public class GameManager : MonoBehaviour
   // Visible variables
   public float timePerDay = 10f;
 
+    // Sound management ref
+    public SoundManager soundManager;
+
   // Variables per run
   private int daysPassed = 0;
   private float dayTimeLeft = 10.0f;
@@ -105,6 +108,8 @@ public class GameManager : MonoBehaviour
     dayEndUI.SetActive(false);
     gameOverUI.SetActive(false);
 
+        soundManager.PlayGameMusic();
+
   }
 
   void Start()
@@ -147,6 +152,7 @@ public class GameManager : MonoBehaviour
 
   public void StartNewGame()
   {
+        soundManager.StopMusic();
     if (gameState == GameState.MainMenu && highscore == 0)
     {
       tutorial.SetActive(true);
@@ -154,6 +160,7 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+            soundManager.StartBackgroundNoise();
       tutorial.SetActive(false);
       gameState = GameState.Game;
 
@@ -185,6 +192,7 @@ public class GameManager : MonoBehaviour
 
   public void EndDay()
   {
+        soundManager.StopBackgroundNoise();
     gameState = GameState.DayEnd;
     
     // TO DO CALCULATE TRUST!!!!!!
@@ -193,11 +201,13 @@ public class GameManager : MonoBehaviour
       currentTrust = 0;
       endGameNextDayButton.SetActive(false);
       endGameRevisionButton.SetActive(true);
+            soundManager.PlayEndDayNegativeMusic();
     }
     else
     {
       endGameNextDayButton.SetActive(true);
       endGameRevisionButton.SetActive(false);
+            soundManager.PlayEndDayPositiveMusic();
     }
     if(currentTrust >= 10) { currentTrust = 0; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
@@ -217,6 +227,8 @@ public class GameManager : MonoBehaviour
 
   public void NextDay()
   {
+        soundManager.StopMusic();
+        soundManager.StartBackgroundNoise();
     daysPassed += 1;
     daysPassedText.text = "Days passed: " + daysPassed;
     currentDate.AddDays(1);
@@ -243,6 +255,8 @@ public class GameManager : MonoBehaviour
 
   public void GameOver()
   {
+        soundManager.StopBackgroundNoise();
+        soundManager.PlayEndGameMusic();
     gameState = GameState.GameOver;
 
     daysSurvivedEndGame.text = "DAYS SURVIVED: " + daysPassed;
@@ -289,12 +303,22 @@ public class GameManager : MonoBehaviour
 
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
     accuracyText.text = "Boss' confidence: " + currentTrust;
+
+        soundManager.PlayGameMusic();
   }
 
 
 
   public void ValidateCandidate(bool accepted)
   {
+        if (accepted)
+        {
+            soundManager.Pass();
+        }
+        else
+        {
+            soundManager.Deny();
+        }
 
     if (!rulesRead) return;
 
@@ -306,6 +330,7 @@ public class GameManager : MonoBehaviour
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
+            StartCoroutine(PlayResultSound(true));
     }
     else
     {
@@ -331,6 +356,8 @@ public class GameManager : MonoBehaviour
       }
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
+
+            StartCoroutine(PlayResultSound(false));
     }
     GetNewCandidate();
   }
@@ -361,8 +388,16 @@ public class GameManager : MonoBehaviour
   public void CheckRulesRead()
   {
     if (rulesRead == false) rulesRead = true;
-    if (rulesButtonText.text == "GO!") rulesButtonText.text = "RULES";
-    else rulesButtonText.text = "GO!";
+        if (rulesButtonText.text == "GO!")
+        {
+            rulesButtonText.text = "RULES";
+            soundManager.RulesHide();
+        }
+        else
+        {
+            rulesButtonText.text = "GO!";
+            soundManager.ShowRules();
+        }
     
   }
 
@@ -414,5 +449,18 @@ public class GameManager : MonoBehaviour
     Application.Quit();
     Debug.Log("PA' FUERA");
   }
+
+    public IEnumerator PlayResultSound(bool success)
+    {
+        yield return new WaitForSeconds(.2f);
+        if (success)
+        {
+            soundManager.Valid();
+        }
+        else
+        {
+            soundManager.NotValid();
+        }
+    }
   
 }
