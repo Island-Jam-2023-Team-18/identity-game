@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion:
-          - 2019.4.14f1
+          - 2021.3.23f1
         targetPlatform:
           - StandaloneLinux64
           - StandaloneWindows64
