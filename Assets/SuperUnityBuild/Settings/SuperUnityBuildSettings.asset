@@ -18,11 +18,11 @@ MonoBehaviour:
   architectures:
   - target: 5
     name: Windows x86
-    enabled: 1
+    enabled: 0
     binaryNameFormat: '{0}.exe'
   - target: 19
     name: Windows x64
-    enabled: 0
+    enabled: 1
     binaryNameFormat: '{0}.exe'
   variants:
   - variantName: Build Output
@@ -114,15 +114,15 @@ MonoBehaviour:
     - {fileID: 6479730842335281440}
   _projectConfigurations:
     configSet:
-      _Buckets: ffffffffffffffff04000000ffffffffffffffff06000000ffffffffffffffff010000000300000000000000020000000700000005000000ffffffff08000000ffffffff
-      _HashCodes: 274390310556bb0207269878560ad528a99f3253e10c3374794e5f22896a390139896d230000000000000000000000000000000000000000000000000000000000000000
+      _Buckets: ffffffffffffffff0400000000000000ffffffff06000000ffffffffffffffff0100000003000000ffffffff020000000700000005000000ffffffff08000000ffffffff
+      _HashCodes: a354e6460556bb0207269878560ad528a99f3253e10c3374794e5f22896a390139896d230000000000000000000000000000000000000000000000000000000000000000
       _Next: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
       _Count: 9
       _Version: 9
       _FreeList: -1
       _FreeCount: 0
       _Keys:
-      - Prod/PC/Windows x86 (App)
+      - Prod/PC/Windows x64 (App)
       - Prod/PC
       - Prod/Linux/Linux x64
       - Prod/Linux
@@ -144,7 +144,7 @@ MonoBehaviour:
         childKeys: []
       - enabled: 1
         childKeys:
-        - Prod/PC/Windows x86 (App)
+        - Prod/PC/Windows x64 (App)
       - enabled: 1
         childKeys: []
       - enabled: 1

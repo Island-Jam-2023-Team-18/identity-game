@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Tropical Gix
-  productName: Kurro Please
+  companyName: DefaultCompany
+  productName: Island Game Jam 2023
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -156,7 +156,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Standalone: com.DefaultCompany.2DProject
-    WebGL: com.tropicalgix.kurroplease
+    WebGL: com.DefaultCompany.Island-Game-Jam-2023
   buildNumber:
     Standalone: 1
     iPhone: 1
@@ -669,7 +669,7 @@ PlayerSettings:
   webGLPowerPreference: 2
   scriptingDefineSymbols:
     Standalone: 
-    WebGL: BUILD_TYPE_PROD;BUILD_PLATFORM_WEBGL;BUILD_ARCH_WEBGL
+    WebGL: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

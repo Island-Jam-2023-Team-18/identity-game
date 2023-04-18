@@ -59,9 +59,6 @@ public class GameManager : MonoBehaviour
   // Visible variables
   public float timePerDay = 10f;
 
-  // Sound management ref
-  public SoundManager soundManager;
-
   // Variables per run
   private int daysPassed = 0;
   private float dayTimeLeft = 10.0f;
@@ -218,7 +215,7 @@ public class GameManager : MonoBehaviour
     }
     if (currentTrust >= 10) { currentTrust = 0; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
-    candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
+    candidatesText.text = "Candidates reviewed: " + candidatsReviewed;
 
     // calculate the accuracy rate as a percentage
     float accuracyRate = ((float)roundSuccesses / candidatesReviewed) * 100f;
@@ -343,11 +340,7 @@ public class GameManager : MonoBehaviour
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
-<<<<<<< Updated upstream
-      StartCoroutine(PlayResultSound(true));
-=======
       soundManager.Pass();
->>>>>>> Stashed changes
     }
     else
     {
@@ -373,12 +366,7 @@ public class GameManager : MonoBehaviour
       }
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
-<<<<<<< Updated upstream
-
-      StartCoroutine(PlayResultSound(false));
-=======
       soundManager.Deny();
->>>>>>> Stashed changes
     }
     GetNewCandidate();
   }

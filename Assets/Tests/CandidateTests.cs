@@ -43,4 +43,43 @@ public class CandidateTests
 
     Assert.Greater(nbs, 0, "Should have some NB candidates");
   }
+
+  [Test]
+  public void CreatedCandidateShouldHaveAllOrigins()
+  {
+    int north = 0;
+    int south = 0;
+    int east = 0;
+    int west = 0;
+
+    CandidateFactory factory = CandidateFactory.GetInstance();
+
+    for (int i = 0; i < 1000; i++)
+    {
+      Candidate candidate = factory.GetCandidate(DateTime.Now);
+
+      switch (candidate.origin)
+      {
+        case OriginType.NORTH:
+          north++;
+          break;
+        case OriginType.SOUTH:
+          south++;
+          break;
+        case OriginType.EAST:
+          east++;
+          break;
+        case OriginType.WEST:
+          west++;
+          break;
+      }
+
+      Debug.Log("Candidate from " + candidate.origin);
+    }
+
+    Assert.Greater(north, 0, "Should have candidates from north");
+    Assert.Greater(south, 0, "Should have candidates from south");
+    Assert.Greater(east, 0, "Should have candidates from east");
+    Assert.Greater(west, 0, "Should have candidates from west");
+  }
 }
