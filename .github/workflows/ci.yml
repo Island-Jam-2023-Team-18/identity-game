@@ -46,6 +46,7 @@ jobs:
       - name: Build project
         uses: game-ci/unity-builder@v2
         with:
+          allowDirtyBuild: true
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: KurroPlease
