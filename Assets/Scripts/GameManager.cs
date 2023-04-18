@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
   private enum GameState { MainMenu, Tutorial, Game, Paused, DayEnd, GameOver }
   private GameState gameState;
 
+  public SoundManager soundManager;
+
   // Main UI Panels
   public GameObject mainMenuUI;
   public GameObject gameUI;
@@ -116,6 +118,7 @@ public class GameManager : MonoBehaviour
   {
     currentDate = DateTime.Today;
     highscore = 0;
+    soundManager.PlayGameMusic();
   }
 
   void Update()
@@ -163,6 +166,9 @@ public class GameManager : MonoBehaviour
       soundManager.StartBackgroundNoise();
       tutorial.SetActive(false);
       gameState = GameState.Game;
+
+      soundManager.StopMusic();
+      soundManager.StartBackgroundNoise();
 
       mainMenuUI.SetActive(false);
       gameUI.SetActive(true);
@@ -260,6 +266,10 @@ public class GameManager : MonoBehaviour
     soundManager.PlayEndGameMusic();
     gameState = GameState.GameOver;
 
+    soundManager.PlayEndGameMusic();
+
+    soundManager.StopBackgroundNoise();
+
     daysSurvivedEndGame.text = "DAYS SURVIVED: " + daysPassed;
     candidatesReviewedEndGame.text = "CANDIDATES REVIEWED: " + (totalSuccesses + totalFails);
 
@@ -272,6 +282,7 @@ public class GameManager : MonoBehaviour
   {
 
     gameState = GameState.MainMenu;
+    soundManager.PlayGameMusic();
 
     gameUI.SetActive(false);
     pauseMenuUI.SetActive(false);
@@ -332,7 +343,11 @@ public class GameManager : MonoBehaviour
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
+<<<<<<< Updated upstream
       StartCoroutine(PlayResultSound(true));
+=======
+      soundManager.Pass();
+>>>>>>> Stashed changes
     }
     else
     {
@@ -358,8 +373,12 @@ public class GameManager : MonoBehaviour
       }
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
+<<<<<<< Updated upstream
 
       StartCoroutine(PlayResultSound(false));
+=======
+      soundManager.Deny();
+>>>>>>> Stashed changes
     }
     GetNewCandidate();
   }
