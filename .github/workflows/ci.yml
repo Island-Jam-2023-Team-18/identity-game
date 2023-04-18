@@ -11,10 +11,12 @@ env:
 jobs:
   build:
     name: Build ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        unityVersion:
+          - 2019.4.14f1
         targetPlatform:
           - StandaloneLinux64
           - StandaloneWindows64
@@ -37,12 +39,14 @@ jobs:
       - name: Run tests
         uses: game-ci/unity-test-runner@v2
         with:
+          unityVersion: ${{ matrix.unityVersion }}
           testMode: EditMode
 
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v2
         with:
+          unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: KurroPlease
 
