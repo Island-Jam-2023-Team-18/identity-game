@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     name: Build ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
