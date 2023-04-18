@@ -215,7 +215,7 @@ public class GameManager : MonoBehaviour
     }
     if (currentTrust >= 10) { currentTrust = 0; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
-    candidatesText.text = "Candidates reviewed: " + candidatsReviewed;
+    candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
 
     // calculate the accuracy rate as a percentage
     float accuracyRate = ((float)roundSuccesses / candidatesReviewed) * 100f;
