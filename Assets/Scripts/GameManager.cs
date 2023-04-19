@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
     gameState = GameState.DayEnd;
 
     // TO DO CALCULATE TRUST!!!!!!
-    currentTrust += ((roundSuccesses - roundFails) - daysPassed);
+    currentTrust += ((roundSuccesses - roundFails) - (daysPassed * 2));
     if (currentTrust <= 0)
     {
       currentTrust = 0;
