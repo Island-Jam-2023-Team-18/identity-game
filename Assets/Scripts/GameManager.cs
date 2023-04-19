@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
       endGameRevisionButton.SetActive(false);
       soundManager.PlayEndDayPositiveMusic();
     }
-    if (currentTrust >= 10) { currentTrust = 0; }
+    if (currentTrust >= 10) { currentTrust = 9; }
     int candidatesReviewed = Mathf.Abs(roundSuccesses) + Mathf.Abs(roundFails);
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
 
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
     soundManager.StartBackgroundNoise();
     daysPassed += 1;
     daysPassedText.text = "Days passed: " + daysPassed;
-    currentDate.AddDays(1);
+    currentDate = currentDate.AddDays(1);
 
     GetNewRules();
 
@@ -321,6 +321,8 @@ public class GameManager : MonoBehaviour
 
   public void ValidateCandidate(bool accepted)
   {
+    if (!rulesRead) return;
+
     if (accepted)
     {
       soundManager.Pass();
@@ -330,17 +332,16 @@ public class GameManager : MonoBehaviour
       soundManager.Deny();
     }
 
-    if (!rulesRead) return;
-
-    ValidationResult validationresult = currentRules.Validate(currentCandidate, currentDate, (daysPassed));
+    ValidationResult validationresult = currentRules.Validate(currentCandidate, currentDate, (daysPassed + 1));
     // TO DO LOGIC HERE
+    bool success = validationresult == ValidationResult.VALID ? accepted : !accepted;
 
 
-    if (validationresult == ValidationResult.VALID)
+    if (success)
     {
       roundSuccesses++;
       currentSuccessesText.text = "Successes: " + roundSuccesses;
-      soundManager.Pass();
+      StartCoroutine(PlayResultSound(true));
     }
     else
     {
@@ -366,7 +367,7 @@ public class GameManager : MonoBehaviour
       }
       roundFails++;
       currentFailsText.text = "Fails: " + roundFails;
-      soundManager.Deny();
+      StartCoroutine(PlayResultSound(false));
     }
     GetNewCandidate();
   }
