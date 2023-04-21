@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
   //Main Menu
   public TextMeshProUGUI mainMenuHighscoreText;
+  public TextMeshProUGUI mainMenuHighScoreNameText;
+  public TextMeshProUGUI mainMenuHighScoreScoreText;
 
   // Main Game UI
   public GameObject tutorial;
@@ -89,6 +91,11 @@ public class GameManager : MonoBehaviour
   //current rules
   RuleSet currentRules;
 
+  // Score data access
+  private IScoreDAO scoreDAO;
+
+  private static readonly string SCORE_API_URL = "https://api.jazbelt.net/high_scores";
+
   private void Awake()
   {
 
@@ -114,8 +121,13 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     currentDate = DateTime.Today;
-    highscore = 0;
     soundManager.PlayGameMusic();
+
+    scoreDAO = new ScoreDAO.ScoreDAOBuilder()
+      .ApiUrl(SCORE_API_URL)
+      .Build();
+
+    StartCoroutine(GetHighScore());
   }
 
   void Update()
@@ -293,12 +305,12 @@ public class GameManager : MonoBehaviour
     dayTimeLeft = 10.0f;
     currentTrust = 5;
 
-    if (highscore < daysPassed)
+    /*if (highscore < daysPassed)
     {
       highscore = daysPassed;
       mainMenuHighscoreText.gameObject.SetActive(true);
       mainMenuHighscoreText.text = "HIGHSCORE: " + highscore;
-    }
+    }*/
 
 
     totalSuccesses = 0;
@@ -470,6 +482,21 @@ public class GameManager : MonoBehaviour
     else
     {
       soundManager.NotValid();
+    }
+  }
+
+  public IEnumerator GetHighScore()
+  {
+    yield return null;
+
+    List<HiScore> scores = scoreDAO.LoadHiScore();
+    if (scores.Count > 0)
+    {
+      HiScore score = scores[0];
+      mainMenuHighScoreNameText.text = "Player: " + score.name;
+      mainMenuHighScoreScoreText.text = "Days passed: " + score.score;
+      highscore = score.score;
+      mainMenuHighscoreText.gameObject.SetActive(true);
     }
   }
 
