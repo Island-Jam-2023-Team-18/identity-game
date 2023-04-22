@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-  private enum GameState { MainMenu, Tutorial, Game, Paused, DayEnd, GameOver }
+  private enum GameState { MainMenu, Tutorial, Game, Paused, DayEnd, GameOver, HighScore }
   private GameState gameState;
 
   public SoundManager soundManager;
@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
   public GameObject pauseMenuUI;
   public GameObject dayEndUI;
   public GameObject gameOverUI;
+  public GameObject hiscoreUI;
 
   //Main Menu
   public TextMeshProUGUI mainMenuHighscoreText;
@@ -57,6 +58,10 @@ public class GameManager : MonoBehaviour
   // End Game UI
   public TextMeshProUGUI daysSurvivedEndGame;
   public TextMeshProUGUI candidatesReviewedEndGame;
+
+  // High Score UI
+  public TMP_InputField playerNameInput;
+  public TextMeshProUGUI hiscoreText;
 
   // Visible variables
   public float timePerDay = 10f;
@@ -107,12 +112,14 @@ public class GameManager : MonoBehaviour
     (pauseMenuUI.transform as RectTransform).anchoredPosition = Vector2.zero;
     (dayEndUI.transform as RectTransform).anchoredPosition = Vector2.zero;
     (gameOverUI.transform as RectTransform).anchoredPosition = Vector2.zero;
+    (hiscoreUI.transform as RectTransform).anchoredPosition = Vector2.zero;
 
     // Deactivate elements
     gameUI.SetActive(false);
     pauseMenuUI.SetActive(false);
     dayEndUI.SetActive(false);
     gameOverUI.SetActive(false);
+    hiscoreUI.SetActive(false);
 
     soundManager.PlayGameMusic();
 
@@ -121,7 +128,6 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     currentDate = DateTime.Today;
-    soundManager.PlayGameMusic();
 
     scoreDAO = new ScoreDAO.ScoreDAOBuilder()
       .ApiUrl(SCORE_API_URL)
@@ -230,7 +236,7 @@ public class GameManager : MonoBehaviour
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
 
     // calculate the accuracy rate as a percentage
-    float accuracyRate = ((float)roundSuccesses / candidatesReviewed) * 100f;
+    float accuracyRate = candidatesReviewed > 0 ? ((float)roundSuccesses / candidatesReviewed) * 100f : 0;
     accuracyText.text = "Accuracy rate: " + accuracyRate.ToString("F2") + "%";
 
     (clip.transform as RectTransform).anchoredPosition = (clipPlaceholders[currentTrust].gameObject.transform as RectTransform).anchoredPosition;
@@ -252,6 +258,7 @@ public class GameManager : MonoBehaviour
     GetNewRules();
 
     rulesRead = false;
+    rulesButtonText.text = "GO!";
 
     totalSuccesses += roundSuccesses;
     roundSuccesses = 0;
@@ -297,6 +304,7 @@ public class GameManager : MonoBehaviour
     pauseMenuUI.SetActive(false);
     dayEndUI.SetActive(false);
     gameOverUI.SetActive(false);
+    hiscoreUI.SetActive(false);
 
     mainMenuUI.SetActive(true);
 
@@ -304,14 +312,6 @@ public class GameManager : MonoBehaviour
     daysPassedText.text = "Days passed: " + daysPassed;
     dayTimeLeft = 10.0f;
     currentTrust = 5;
-
-    /*if (highscore < daysPassed)
-    {
-      highscore = daysPassed;
-      mainMenuHighscoreText.gameObject.SetActive(true);
-      mainMenuHighscoreText.text = "HIGHSCORE: " + highscore;
-    }*/
-
 
     totalSuccesses = 0;
     totalFails = 0;
@@ -326,10 +326,28 @@ public class GameManager : MonoBehaviour
     candidatesText.text = "Candidates reviewed: " + candidatesReviewed;
     accuracyText.text = "Boss' confidence: " + currentTrust;
 
+    StartCoroutine(GetHighScore());
+
     soundManager.PlayGameMusic();
   }
 
+  public void GoToHiscoreScreen()
+  {
+    gameState = GameState.HighScore;
 
+    // Deactivate elements
+    gameUI.SetActive(false);
+    pauseMenuUI.SetActive(false);
+    dayEndUI.SetActive(false);
+    gameOverUI.SetActive(false);
+    mainMenuUI.SetActive(false);
+    hiscoreUI.SetActive(true);
+
+    hiscoreText.text = highscore + " days passed!!";
+
+    soundManager.StopMusic();
+    soundManager.HiScore();
+  }
 
   public void ValidateCandidate(bool accepted)
   {
@@ -382,6 +400,25 @@ public class GameManager : MonoBehaviour
       StartCoroutine(PlayResultSound(false));
     }
     GetNewCandidate();
+  }
+
+  public void OnExitToMainMenuRequest()
+  {
+    if (daysPassed > highscore)
+    {
+      highscore = daysPassed;
+      GoToHiscoreScreen();
+    }
+    else
+    {
+      ExitToMainMenu();
+    }
+  }
+
+  public void OnHiScoreEntered()
+  {
+    StartCoroutine(SaveHiScore());
+    ExitToMainMenu();
   }
 
   private void ToogleShowDebugInfo()
@@ -493,11 +530,26 @@ public class GameManager : MonoBehaviour
     if (scores.Count > 0)
     {
       HiScore score = scores[0];
-      mainMenuHighScoreNameText.text = "Player: " + score.name;
-      mainMenuHighScoreScoreText.text = "Days passed: " + score.score;
       highscore = score.score;
+      mainMenuHighScoreNameText.text = "Player: " + score.name;
+      mainMenuHighScoreScoreText.text = "Days passed: " + highscore;
       mainMenuHighscoreText.gameObject.SetActive(true);
     }
+  }
+
+  public IEnumerator SaveHiScore()
+  {
+    yield return null;
+
+    HiScore score = new HiScore
+    {
+      score = highscore,
+      name = playerNameInput.text
+    };
+
+    Debug.Log("Saving score for player " + score.name);
+
+    scoreDAO.SaveHiScore(score);
   }
 
 }
