@@ -524,23 +524,21 @@ public class GameManager : MonoBehaviour
 
   public IEnumerator GetHighScore()
   {
-    yield return null;
-
     List<HiScore> scores = scoreDAO.LoadHiScore();
     if (scores.Count > 0)
     {
       HiScore score = scores[0];
       highscore = score.score;
       mainMenuHighScoreNameText.text = "Player: " + score.name;
-      mainMenuHighScoreScoreText.text = "Days passed: " + highscore;
+      mainMenuHighScoreScoreText.text = "Days survived: " + highscore;
       mainMenuHighscoreText.gameObject.SetActive(true);
     }
+
+    yield return null;
   }
 
   public IEnumerator SaveHiScore()
   {
-    yield return null;
-
     HiScore score = new HiScore
     {
       score = highscore,
@@ -550,6 +548,8 @@ public class GameManager : MonoBehaviour
     Debug.Log("Saving score for player " + score.name);
 
     scoreDAO.SaveHiScore(score);
+
+    yield return null;
   }
 
 }
